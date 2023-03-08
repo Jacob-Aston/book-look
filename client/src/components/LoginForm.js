@@ -22,7 +22,6 @@ const LoginForm = () => {
   
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log("userFOrmDaTa: ", userFormData);
 
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
@@ -33,21 +32,19 @@ const LoginForm = () => {
 
 
     try {
-      console.log("formData: ", userFormData);
       const { data } = await loginUser({
         variables: {
           ...userFormData
         },
       });
 
-      console.log("this one", data);
 
       // if (error) {
       //   throw new Error('something went wrong!');
       // }
 
-      console.log(data.loginUser.user);
-      Auth.login(data.loginUser.token);
+      console.log("data.", data.login.user);
+      Auth.login(data.login.token);
     } catch (err) {
       console.error(error);
       setShowAlert(true);
