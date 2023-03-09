@@ -10,42 +10,46 @@ import { REMOVE_BOOK } from "../utils/mutations";
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
-  const { data } = useQuery(GET_ME);
+  const profile = Auth.getProfile()
+  console.log("profile", profile)
+  const { loading, data } = useQuery(GET_ME, {
+    variables: { _id: profile.data._id }
+  });
+  
+  
+  // const token = Auth.loggedIn() ? Auth.getToken() : null;
+  
+  // if (!token) {
+  //   return false;
+  // }
+  
+
+  
   const user = data;
   setUserData(user);
-
+  console.log("userData", userData)
   // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
-
+  // const userDataLength = Object.keys(userData).length;
+  
   const [deleteBook, { error }] = useMutation(REMOVE_BOOK);
-
-
-
-  console.log("userData", userData);
-
+  
   // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
+    // const getUserData = async () => {
+    //   try {
+        // const response = await getMe(token);
+        
+        // if (!response.ok) {
+        //   throw new Error('something went wrong!');
+        // }
 
-  //       if (!token) {
-  //         return false;
-  //       }
+    //     const user = await data.json();
+    //     setUserData(user);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // };
 
-  //       const response = await getMe(token);
-
-  //       if (!response.ok) {
-  //         throw new Error('something went wrong!');
-  //       }
-
-  //       const user = await response.json();
-  //       setUserData(user);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-
-  //   getUserData();
+    // getUserData();
   // }, [userDataLength]);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -79,7 +83,7 @@ const SavedBooks = () => {
   };
 
   // if data isn't here yet, say so
-  if (!userDataLength) {
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
 
