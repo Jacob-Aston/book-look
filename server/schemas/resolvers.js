@@ -37,19 +37,21 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (parent, { user, input }) => {
-      const book = await Book.create({input});
+    saveBook: async (parent, { userId, input }) => {
+      console.log ("saveBook resolver data: ", userId, input);
+      // const book = await Book.create(...input);
 
-      await User.findOneAndUpdate(
-        { username: user },
-        { $addToSet: { savedBooks: book.bookId } }
+      const user = await User.findOneAndUpdate(
+        { userId: userId },
+        { $addToSet: { savedBooks: input }},
+        { new: true }
       );
 
       return user;
     },
-    removeBook: async (parent, { user, bookId }) => {
+    removeBook: async (parent, { userId, bookId }) => {
       return User.findOneAndUpdate(
-        { _id: user._id },
+        { _id: userId },
         { $pull: { savedBooks: { bookId } } },
         { new: true }
       );

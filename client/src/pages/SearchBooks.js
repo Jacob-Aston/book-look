@@ -53,34 +53,36 @@ const SearchBooks = () => {
       console.error(err);
     }
   };
+  
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
-
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
+    console.log("bookToSave: ", bookToSave);
+    
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
+    
     if (!token) {
       return false;
     }
     
     const user = await Auth.getProfile();
+    console.log("user Info: ", user);
 
 
     try {
-      const { data } = await saveBook(
+      const data = await saveBook(
         {
           variables: {
-            user: user.username,
+            userId: user.data._id,
             input: bookToSave,
           }
         }
       );
 
-      console.log(data);
+      console.log("saveBOokData:", data);
 
       // if (error) {
       //   throw new Error('something went wrong!');
