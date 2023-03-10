@@ -6,7 +6,8 @@ const resolvers = {
   Query: {
     me: async (parent, {_id}) => {
       console.log("id", _id);
-      const user = User.find({_id: _id});
+      const user = await User.findOne({_id: _id});
+      console.log("user", user)
       return user;
     },
   },
@@ -40,16 +41,22 @@ const resolvers = {
       return { token, user };
     },
     saveBook: async (parent, { userId, input }) => {
-      console.log ("saveBook resolver data: ", userId, input);
-      // const book = await Book.create(...input);
+      console.log ("--> saveBook resolver data: ", userId, input);
+      // try {
+      //   const book = await Book.create({...input});
+        
+      // } catch (error) {
+      //   console.error(error)
+      // }
+      // console.log("book", book);
 
       const user = await User.findOneAndUpdate(
-        { userId: userId },
+        { _id: userId },
         { $addToSet: { savedBooks: input }},
         { new: true }
       );
 
-      return user;
+      return {user};
     },
     removeBook: async (parent, { userId, bookId }) => {
       return User.findOneAndUpdate(
