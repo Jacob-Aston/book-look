@@ -67,16 +67,11 @@ const SearchBooks = () => {
     if (!token) {
       return false;
     }
-    
-    const user = await Auth.getProfile();
-    console.log("user Info: ", user);
-
 
     try {
-      const data = await saveBook(
+      const { data } = await saveBook(
         {
           variables: {
-            userId: user.data._id,
             input: bookToSave,
           }
         }

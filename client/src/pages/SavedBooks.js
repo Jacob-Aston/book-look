@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Jumbotron,
   Container,
@@ -15,21 +15,9 @@ import { GET_ME } from "../utils/queries";
 import { REMOVE_BOOK } from "../utils/mutations";
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
-  const profile = Auth.getProfile();
-  console.log("profile", profile);
-  const profileId = profile.data._id;
-  console.log("profileId", profileId);
-  
-  const { loading, data } = useQuery(GET_ME, {
-    variables: { _id: profileId },
-  });
-  console.log("data: ", data)
-  
-  useEffect(() => {
-    // setUserData(data);
-  }, []);
+  const { loading, data } = useQuery(GET_ME);
 
+  console.log("data: ", data);
 
   const [deleteBook, { error }] = useMutation(REMOVE_BOOK);
 
@@ -42,21 +30,12 @@ const SavedBooks = () => {
     }
 
     try {
-      console.log("user Info", userData);
-      const data = await deleteBook({
+      await deleteBook({
         variables: {
-          userId: userData._id,
-          bookId: bookId,
+          bookId,
         },
       });
 
-
-      // if (!response.ok) {
-      //   throw new Error('something went wrong!');
-      // }
-
-      const updatedUser = await data.json();
-      setUserData(updatedUser);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
@@ -78,14 +57,14 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {data?.savedBooks?.length
-            ? `Viewing ${data.savedBooks.length} saved ${
-                data.savedBooks.length === 1 ? "book" : "books"
+          {data?.me?.savedBooks?.length
+            ? `Viewing ${data?.me?.savedBooks?.length} saved ${
+                data?.me?.savedBooks?.length === 1 ? "book" : "books"
               }:`
             : "You have no saved books!"}
         </h2>
         <CardColumns>
-          {userData?.savedBooks?.map((book) => {
+          {data?.me?.savedBooks?.map((book) => {
             return (
               <Card key={book.bookId} border="dark">
                 {book.image ? (
