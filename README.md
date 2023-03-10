@@ -26,4 +26,6 @@ Github profile page: [jacob-aston](https://github.com/jacob-aston)
 
 Repo: https://github.com/Jacob-Aston/book-look
 
+Deployed Page: https://mern-assignment.herokuapp.com/
+
 ---
